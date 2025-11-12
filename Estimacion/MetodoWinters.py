@@ -7,9 +7,9 @@ ruta_csv = r"C:\Users\User\Documents\GitHub\RepoProyectoIO\ventaspormes.csv"
 
 # === 2. Cargar dataset ===
 df = pd.read_csv(ruta_csv)
-
+df = df.iloc[:-5]  # Eliminar las últimas 5 filas
 # === 3. Definir cuántos meses predecir ===
-meses_a_predecir = 7
+meses_a_predecir = 12
 
 # === 4. Crear DataFrame de salida ===
 df_resultado = pd.DataFrame({"Mes": list(range(1, len(df) + meses_a_predecir + 1))})
@@ -29,10 +29,12 @@ for columna in df.columns[1:]:
     df_resultado[columna + " Estimado"] = serie_completa
 
 # === 6. Exportar a CSV ===
-salida = os.path.join(os.getcwd(), "ventas_estimadas.csv")
+salida = os.path.join(os.getcwd(), "ventas_estimadas_cError.csv")
 df_resultado.to_csv(salida, index=False)
 
 # === 7. Calcular y mostrar el promedio total anual ===
-promedio_anual = df_resultado.iloc[:, 1:].sum().mean() / 3
-print(f"Promedio total anual: {promedio_anual:.2f}")
+promedios_anuales = df_resultado.iloc[:, 1:].sum() / 3  # Dividir por 3 para obtener el promedio anual
+
+for tipo_auto, promedio in promedios_anuales.items():
+    print(f"Promedio total anual para {tipo_auto}: {promedio:.2f}")
 
